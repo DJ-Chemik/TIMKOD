@@ -1,11 +1,20 @@
 import React from 'react';
+import Navigator from './Navigator';
 
-function App() {
-  return (
-    <div style={{position: "absolute", top: "40%", left: "40%", fontSize: "3rem"}}>
-      TiMKOD App  
-    </div>
-  );
+enum Content {
+  Main
+}
+
+const App = () => {
+  let contentOnScreen: Content = Content.Main;
+  
+  if (contentOnScreen === Content.Main) {
+    return (
+      <Navigator />
+    )
+  }
+
+  return null;
 }
 
 export default App;
