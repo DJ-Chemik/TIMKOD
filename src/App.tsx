@@ -14,13 +14,6 @@ const App = () => {
     setContentOnScreen(content);
   };
   
-  if (contentOnScreen === Content.Main) {
-    return (
-      <Navigator 
-        changeContent={changeContent}
-      />
-    )
-  }
   
   if (contentOnScreen === Content.Task1) {
     return (
@@ -28,7 +21,11 @@ const App = () => {
     )
   }
 
-  return null;
+  return (
+    <Navigator 
+      changeContent={changeContent}
+    />
+  )
 }
 
 export default App;
