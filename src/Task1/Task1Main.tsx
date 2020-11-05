@@ -20,6 +20,18 @@ const Task1Main = () => {
         file && reader.readAsText(file);
     }
 
+    const getOneLetter = (position: number) => {
+       return text[position];
+    }
+
+    const getFragment = (start: number, stop: number) => {
+        let fragment = '';
+        for (let i = start; i <= stop; i++) {
+            fragment = fragment + text[i];
+        }
+        return fragment;       
+    }
+
 
     return(
         <div>
