@@ -1,5 +1,6 @@
 // eslint-disable-next-line
 import React, { useState } from 'react';
+import { ContentBody, TitleHeader, UsageFrame } from './Task1.styled';
 
 
 const file = '../../task1/files/norm_hamlet.txt';
@@ -35,13 +36,18 @@ const Task1Main = () => {
 
     return(
         <div>
-            Task 1
-            <div style={{margin: '2rem'}}>
-                <input type="file" onChange={(e) => showFile(e.target.files)} />
-                <div style={{margin: '2rem'}}>
-                    {text}
-                </div>
-            </div>
+            <TitleHeader>
+                Task 1
+            </TitleHeader>
+            <ContentBody>
+                <UsageFrame maxHeight={200}>
+                    <input type="file" onChange={(e) => showFile(e.target.files)} />
+                    <div style={{margin: '2rem'}}>
+                        {text}
+                    </div>
+                </UsageFrame>
+
+            </ContentBody>
         </div>
     );
 }
