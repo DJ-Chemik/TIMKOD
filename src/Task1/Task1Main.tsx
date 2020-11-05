@@ -1,8 +1,12 @@
 // eslint-disable-next-line
 import React, { useState } from 'react';
-import { ContentBody, FrameTitle, SimpleMarginFrame, TitleHeader, UsageFrame } from './Task1.styled';
+import { Background, ContentBody, FrameTitle, SimpleMarginFrame, TitleHeader, UsageFrame } from './Task1.styled';
 
 const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'x', 'y', 'z', ' ']
+
+interface LetterInfo {
+
+}
 
 const Task1Main = () => {
     const [scannedText, setScannedText] = useState<any>('');
@@ -52,7 +56,7 @@ const Task1Main = () => {
     }
 
     return(
-        <div>
+        <Background>
             <TitleHeader>
                 Task 1
             </TitleHeader>
@@ -72,9 +76,17 @@ const Task1Main = () => {
                         {textWithApproximation0}
                     </SimpleMarginFrame>
                 </UsageFrame>
+                <FrameTitle>Częstość występowania liter w tekście</FrameTitle> 
+                <UsageFrame maxHeight={200}>
+                    <input type='number' onChange={() => {}}/>
+                    <button onClick={() => {}}>Oblicz</button>
+                    <SimpleMarginFrame>
+                        a: 10%
+                    </SimpleMarginFrame>
+                </UsageFrame>
 
             </ContentBody>
-        </div>
+        </Background>
     );
 }
 
