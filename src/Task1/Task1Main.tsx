@@ -1,10 +1,14 @@
 // eslint-disable-next-line
 import React, { useEffect, useState } from 'react';
+import Approximation0 from './Approximation0';
+import Approximation1 from './Approximation1';
+import LettersFrequency from './LettersFrequency';
 import { Background, ContentBody, FrameTitle, SimpleMarginFrame, TitleHeader, UsageFrame } from './Task1.styled';
+import TextScanner from './TextScanner';
 
-const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'x', 'y', 'z', ' ']
+const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'x', 'y', 'z', ' '];
 
-interface LetterInfo {
+export interface LetterInfo {
     letter: string,
     probability: number;
     count: number;
@@ -12,13 +16,8 @@ interface LetterInfo {
 
 const Task1Main = () => {
     const [scannedText, setScannedText] = useState<any>('');
-    const [textWithApproximation0, setTextWithApproximation0] = useState<string>('');
-    const [textWithApproximation1, setTextWithApproximation1] = useState<string>('');
     const [letterInfos, setLetterInfos] = useState<LetterInfo[]>([]);
-
-    const [numberOfLetters, setNumberOfLetters] = useState<number>(0);
-    const [lettersToCheckInTest, setLettersToCheckInTest] = useState<number>(0);
-
+    
     useEffect(() => {
         const infos: LetterInfo[] = letters.map(letter => ({
             letter: letter, 
@@ -28,23 +27,6 @@ const Task1Main = () => {
         setLetterInfos(infos);
     }, [])
 
-    const showFile = async (files: FileList | null) => {
-        let file;
-        if (files) {
-            file = files[0];
-        }
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            const content = reader.result;
-            setScannedText(content);
-        }
-        file && reader.readAsText(file);
-    }
-
-    const getOneLetter = (text: string, position: number) => {
-       return text[position];
-    }
-
     const getFragment = (text: string, start: number, stop: number) => {
         let fragment = '';
         for (let i = start; i <= stop; i++) {
@@ -53,114 +35,19 @@ const Task1Main = () => {
         return fragment;       
     }
 
-    const handleChangeNumberOfLetters = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setNumberOfLetters(parseInt(event.target.value));
-    }
-
-    const randomInt = (min: number, max: number) => {
-        return Math.floor(Math.random() * (+max+1 - +min)) + +min; 
-    }
-
-    const generateText0 = () => {
-        let text = '';
-        for (let i = 0; i < numberOfLetters; i++) {
-            text = text + letters[randomInt(0, letters.length)];
-        }
-        setTextWithApproximation0(text);
-    }
-
-    const generateText1 = () => {
-        let text = '';
-        const infos = [...letterInfos];
-        
-        for (let i = 0; i < numberOfLetters; i++) {
-            let random = Math.random();
-            const found = infos.find(info => {
-                if (info.probability >= random) {
-                    return info;
-                }else {
-                    random = random - info.probability;
-                }
-            });
-            if (found) {
-                text = text + found.letter;
-            }  
-        }
-        
-        setTextWithApproximation1(text);
-    }
-
-    const checkProbabilityForAllLetters = () => {
-        const maxLetters = lettersToCheckInTest;
-        const infos = [...letterInfos];
-        infos?.forEach(info => {
-            info.count = 0;
-            info.probability = 0;
-        });
-        for (let i = 0; i < maxLetters; i++) {
-            const letter = getOneLetter(scannedText, i);
-            const foundInfo = infos.find(info => info.letter === letter);
-            if (foundInfo) {
-                foundInfo.count++;
-            }             
-        }
-        const newInfos = infos.map(info => ({...info, probability: info.count/maxLetters}));
-        const sortedInfos = newInfos.sort((a: LetterInfo, b: LetterInfo) => {
-            return b.count - a.count;
-        });
-        setLetterInfos(sortedInfos);
-    }
-
     return(
         <Background>
-            <TitleHeader>
-                Task 1
-            </TitleHeader>
+            <TitleHeader> Task 1 </TitleHeader>
             <ContentBody>
-                <FrameTitle>Wczytywanie tekstu</FrameTitle>
-                <UsageFrame maxHeight={200}>
-                    <input type="file" onChange={(e) => showFile(e.target.files)} />
-                    <SimpleMarginFrame>
-                        {scannedText}
-                    </SimpleMarginFrame>
-                </UsageFrame>
-                <FrameTitle>Przybliżenie 0 rzędu</FrameTitle>
-                <UsageFrame maxHeight={200}>
-                    <input type='number' onChange={handleChangeNumberOfLetters}/>
-                    <button onClick={generateText0}>Wygeneruj tekst</button>
-                    <SimpleMarginFrame>
-                        {textWithApproximation0}
-                    </SimpleMarginFrame>
-                </UsageFrame>
-                <FrameTitle>Częstość występowania liter w tekście</FrameTitle> 
-                <UsageFrame maxHeight={200}>
-                    <input type='number' onChange={(e) => {setLettersToCheckInTest(parseInt(e.target.value))}}/>
-                    <button onClick={checkProbabilityForAllLetters}>Oblicz</button>
-                    <SimpleMarginFrame>
-                        {letterInfos.map(info => {
-                            return (
-                                <>
-                                    {info.letter === ' ' && 
-                                        `SPACJA: ${info.count}   `
-                                    }
-                                    {info.letter !== ' ' && 
-                                        `${ info.letter}: ${info.count}   `
-                                    }
-                                    <br/> 
-                                </>
-                            )
-                        })}
-                    </SimpleMarginFrame>
-                </UsageFrame>
-                <FrameTitle>Przybliżenie 1 rzędu</FrameTitle>
-                <UsageFrame maxHeight={200}>
-                    <input type='number' onChange={handleChangeNumberOfLetters}/>
-                    <button onClick={generateText1}>Wygeneruj tekst</button>
-                    <SimpleMarginFrame>
-                        {textWithApproximation1}
-                    </SimpleMarginFrame>
-                </UsageFrame>
-
+                <TextScanner scannedText={scannedText} setScannedText={setScannedText}/>
+                <Approximation0/>
+                <LettersFrequency
+                    isActive={scannedText.length}
+                    scannedText={scannedText} 
+                    letterInfos={letterInfos} 
+                    setLetterInfos={setLetterInfos}
+                />
+                <Approximation1 isActive={!!letterInfos[0].probability} letterInfos={letterInfos}/>
             </ContentBody>
         </Background>
     );
