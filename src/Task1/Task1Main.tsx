@@ -13,6 +13,7 @@ interface LetterInfo {
 const Task1Main = () => {
     const [scannedText, setScannedText] = useState<any>('');
     const [textWithApproximation0, setTextWithApproximation0] = useState<string>('');
+    const [textWithApproximation1, setTextWithApproximation1] = useState<string>('');
     const [letterInfos, setLetterInfos] = useState<LetterInfo[]>([]);
 
     const [numberOfLetters, setNumberOfLetters] = useState<number>(0);
@@ -63,9 +64,17 @@ const Task1Main = () => {
     const generateText0 = () => {
         let text = '';
         for (let i = 0; i < numberOfLetters; i++) {
-            text = text + letters[randomInt(0, letters.length)]                        
+            text = text + letters[randomInt(0, letters.length)];
         }
         setTextWithApproximation0(text);
+    }
+
+    const generateText1 = () => {
+        let text = '';
+        for (let i = 0; i < numberOfLetters; i++) {
+            text = text + letters[randomInt(0, letters.length)];
+        }
+        setTextWithApproximation1(text);
     }
 
     const checkProbabilityForAllLetters = () => {
@@ -82,14 +91,9 @@ const Task1Main = () => {
                 foundInfo.count++;
             }             
         }
-        setLetterInfos(infos);
-    }
-
-    const sortLetters = () => {
-        const infos = letterInfos.sort((a: LetterInfo, b: LetterInfo) => {
+        setLetterInfos(infos.sort((a: LetterInfo, b: LetterInfo) => {
             return b.count - a.count;
-        })
-        setLetterInfos([...infos]);
+        }));
     }
 
     return(
@@ -117,7 +121,6 @@ const Task1Main = () => {
                 <UsageFrame maxHeight={200}>
                     <input type='number' onChange={(e) => {setLettersToCheckInTest(parseInt(e.target.value))}}/>
                     <button onClick={checkProbabilityForAllLetters}>Oblicz</button>
-                    <button onClick={sortLetters}>Sortuj od największych</button>
                     <SimpleMarginFrame>
                         {letterInfos.map(info => {
                             let count = 0;
@@ -133,6 +136,14 @@ const Task1Main = () => {
                                 </>
                             )
                         })}
+                    </SimpleMarginFrame>
+                </UsageFrame>
+                <FrameTitle>Przybliżenie 1 rzędu</FrameTitle>
+                <UsageFrame maxHeight={200}>
+                    <input type='number' onChange={handleChangeNumberOfLetters}/>
+                    <button onClick={generateText1}>Wygeneruj tekst</button>
+                    <SimpleMarginFrame>
+                        {textWithApproximation1}
                     </SimpleMarginFrame>
                 </UsageFrame>
 
