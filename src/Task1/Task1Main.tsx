@@ -1,18 +1,31 @@
 // eslint-disable-next-line
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Background, ContentBody, FrameTitle, SimpleMarginFrame, TitleHeader, UsageFrame } from './Task1.styled';
 
 const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'x', 'y', 'z', ' ']
 
 interface LetterInfo {
-
+    letter: string,
+    probability: number;
+    count: number;
 }
 
 const Task1Main = () => {
     const [scannedText, setScannedText] = useState<any>('');
     const [textWithApproximation0, setTextWithApproximation0] = useState<string>('');
+    const [letterInfos, setLetterInfos] = useState<LetterInfo[]>([]);
 
     const [numberOfLetters, setNumberOfLetters] = useState<number>(0);
+    const [lettersToCheckInTest, setLettersToCheckInTest] = useState<number>(0);
+
+    useEffect(() => {
+        const infos: LetterInfo[] = letters.map(letter => ({
+            letter: letter, 
+            probability: 0,
+            count: 0,
+        }))
+        setLetterInfos(infos);
+    }, [])
 
     const showFile = async (files: FileList | null) => {
         let file;
@@ -55,6 +68,30 @@ const Task1Main = () => {
         setTextWithApproximation0(text);
     }
 
+    const checkProbabilityForAllLetters = () => {
+        const maxLetters = lettersToCheckInTest;
+        const infos = [...letterInfos];
+        infos?.forEach(info => {
+            info.count = 0;
+            info.probability = 0;
+        });
+        for (let i = 0; i < maxLetters; i++) {
+            const letter = getOneLetter(scannedText, i);
+            const foundInfo = infos.find(info => info.letter === letter);
+            if (foundInfo) {
+                foundInfo.count++;
+            }             
+        }
+        setLetterInfos(infos);
+    }
+
+    const sortLetters = () => {
+        const infos = letterInfos.sort((a: LetterInfo, b: LetterInfo) => {
+            return b.count - a.count;
+        })
+        setLetterInfos([...infos]);
+    }
+
     return(
         <Background>
             <TitleHeader>
@@ -78,10 +115,24 @@ const Task1Main = () => {
                 </UsageFrame>
                 <FrameTitle>Częstość występowania liter w tekście</FrameTitle> 
                 <UsageFrame maxHeight={200}>
-                    <input type='number' onChange={() => {}}/>
-                    <button onClick={() => {}}>Oblicz</button>
+                    <input type='number' onChange={(e) => {setLettersToCheckInTest(parseInt(e.target.value))}}/>
+                    <button onClick={checkProbabilityForAllLetters}>Oblicz</button>
+                    <button onClick={sortLetters}>Sortuj od największych</button>
                     <SimpleMarginFrame>
-                        a: 10%
+                        {letterInfos.map(info => {
+                            let count = 0;
+                            return (
+                                <>
+                                    {info.letter === ' ' && 
+                                        `SPACJA: ${info.count}   `
+                                    }
+                                    {info.letter !== ' ' && 
+                                        `${ info.letter}: ${info.count}   `
+                                    }
+                                    <br/> 
+                                </>
+                            )
+                        })}
                     </SimpleMarginFrame>
                 </UsageFrame>
 
