@@ -71,9 +71,22 @@ const Task1Main = () => {
 
     const generateText1 = () => {
         let text = '';
+        const infos = [...letterInfos];
+        
         for (let i = 0; i < numberOfLetters; i++) {
-            text = text + letters[randomInt(0, letters.length)];
+            let random = Math.random();
+            const found = infos.find(info => {
+                if (info.probability >= random) {
+                    return info;
+                }else {
+                    random = random - info.probability;
+                }
+            });
+            if (found) {
+                text = text + found.letter;
+            }  
         }
+        
         setTextWithApproximation1(text);
     }
 
@@ -91,9 +104,11 @@ const Task1Main = () => {
                 foundInfo.count++;
             }             
         }
-        setLetterInfos(infos.sort((a: LetterInfo, b: LetterInfo) => {
+        const newInfos = infos.map(info => ({...info, probability: info.count/maxLetters}));
+        const sortedInfos = newInfos.sort((a: LetterInfo, b: LetterInfo) => {
             return b.count - a.count;
-        }));
+        });
+        setLetterInfos(sortedInfos);
     }
 
     return(
@@ -123,7 +138,6 @@ const Task1Main = () => {
                     <button onClick={checkProbabilityForAllLetters}>Oblicz</button>
                     <SimpleMarginFrame>
                         {letterInfos.map(info => {
-                            let count = 0;
                             return (
                                 <>
                                     {info.letter === ' ' && 
