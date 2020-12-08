@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import Approximation0 from './Approximation0';
 import Approximation1 from './Approximation1';
+import ConditionalProbability from './ConditionalProbability';
 import LettersFrequency from './LettersFrequency';
 import { Background, ContentBody, FrameTitle, SimpleMarginFrame, TitleHeader, UsageFrame } from './Task1.styled';
 import TextScanner from './TextScanner';
@@ -17,6 +18,7 @@ export interface LetterInfo {
 const Task1Main = () => {
     const [scannedText, setScannedText] = useState<any>('');
     const [letterInfos, setLetterInfos] = useState<LetterInfo[]>([]);
+    const [mostPopularSigns, setMostPopularSigns] = useState<string[]>([]);
     
     useEffect(() => {
         const infos: LetterInfo[] = letters.map(letter => ({
@@ -47,7 +49,12 @@ const Task1Main = () => {
                     letterInfos={letterInfos} 
                     setLetterInfos={setLetterInfos}
                 />
-                <Approximation1 isActive={!!letterInfos[0].probability} letterInfos={letterInfos}/>
+                {letterInfos.length && 
+                    <>
+                        <Approximation1 isActive={!!letterInfos[0].probability} letterInfos={letterInfos}/>
+                        <ConditionalProbability isActive={!!letterInfos[0].probability} letterInfos={letterInfos} />
+                    </>
+                }
             </ContentBody>
         </Background>
     );
