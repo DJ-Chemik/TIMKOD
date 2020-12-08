@@ -13,18 +13,20 @@ export interface LetterInfo {
     letter: string,
     probability: number;
     count: number;
+    propabilityAfter: Map<string, number>;
 }
 
 const Task1Main = () => {
     const [scannedText, setScannedText] = useState<any>('');
     const [letterInfos, setLetterInfos] = useState<LetterInfo[]>([]);
-    const [mostPopularSigns, setMostPopularSigns] = useState<string[]>([]);
+    const [maxScannedLetters, setMaxScannedLetters] = useState<number>(0);
     
     useEffect(() => {
         const infos: LetterInfo[] = letters.map(letter => ({
             letter: letter, 
             probability: 0,
             count: 0,
+            propabilityAfter: new Map(),
         }))
         setLetterInfos(infos);
     }, [])
@@ -48,11 +50,17 @@ const Task1Main = () => {
                     scannedText={scannedText} 
                     letterInfos={letterInfos} 
                     setLetterInfos={setLetterInfos}
+                    setMaxScannedLetters={setMaxScannedLetters}
                 />
                 {letterInfos.length && 
                     <>
                         <Approximation1 isActive={!!letterInfos[0].probability} letterInfos={letterInfos}/>
-                        <ConditionalProbability isActive={!!letterInfos[0].probability} letterInfos={letterInfos} />
+                        <ConditionalProbability 
+                            isActive={!!letterInfos[0].probability} 
+                            letterInfos={letterInfos} 
+                            scannedText={scannedText} 
+                            maxLetters={maxScannedLetters}
+                        />
                     </>
                 }
             </ContentBody>

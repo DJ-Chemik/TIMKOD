@@ -11,9 +11,10 @@ interface Props {
     scannedText: any;
     letterInfos: LetterInfo[];
     setLetterInfos: (infos: LetterInfo[]) => void;
+    setMaxScannedLetters: (max: number) => void;
 }
 
-const LettersFrequency = ({isActive, scannedText, letterInfos, setLetterInfos}: Props) => {
+const LettersFrequency = ({isActive, scannedText, letterInfos, setLetterInfos, setMaxScannedLetters}: Props) => {
     const [lettersToCheckInTest, setLettersToCheckInTest] = useState<number>(0);
 
     const getOneLetter = (text: string, position: number) => {
@@ -22,6 +23,7 @@ const LettersFrequency = ({isActive, scannedText, letterInfos, setLetterInfos}: 
 
     const checkProbabilityForAllLetters = () => {
         const maxLetters = lettersToCheckInTest;
+        setMaxScannedLetters(maxLetters);
         const infos = [...letterInfos];
         infos?.forEach(info => {
             info.count = 0;

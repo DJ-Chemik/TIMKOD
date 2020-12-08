@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { createGlobalStyle } from 'styled-components';
 import { FrameTitle, SimpleMarginFrame, UsageFrame } from './Task1.styled';
 import { LetterInfo } from './Task1Main';
 import Unavailable from './Unavailable';
@@ -8,14 +9,14 @@ const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm'
 interface Props {
     isActive: boolean;
     letterInfos: LetterInfo[];
+    scannedText: any;
+    maxLetters: number;
 }
 
-const ConditionalProbability = ({isActive, letterInfos}: Props) => {
+const ConditionalProbability = ({isActive, letterInfos, scannedText, maxLetters}: Props) => {
     const [mostPopularLetters, setMostPopularLetters] = useState<LetterInfo[]>([]);
 
-    
-
-    useEffect(() => {
+    const findMostPopularLetters = () => {
         if (letterInfos.length < 1) {
             return;
         }
@@ -44,8 +45,33 @@ const ConditionalProbability = ({isActive, letterInfos}: Props) => {
         if (mostPopular) {
             setMostPopularLetters(mostPopular);
         }
+    }
 
-    }, [letterInfos])
+    const checkProbabilityForString = (text: string) => {
+        
+        return -1;
+    }
+
+    const findConditionalPropability = () => {
+        mostPopularLetters.map((popularLetter) => {
+            letterInfos.map((letterInfo) => {
+                const bigram = popularLetter.letter + letterInfo.letter;
+                console.log('bigram: [', bigram);
+                const probabilityOfPopularLetter = popularLetter.probability;
+                const propabilityOfBigram = checkProbabilityForString(bigram); //TODO
+                const conditionalPropability = propabilityOfBigram / probabilityOfPopularLetter;
+                letterInfo.propabilityAfter.set(popularLetter.letter, conditionalPropability);
+            });
+        })
+    }   
+
+    useEffect(() => {
+        findMostPopularLetters();
+    }, [letterInfos]);
+
+    useEffect(() => {
+        findConditionalPropability();
+    }, [mostPopularLetters]);
 
     if (!isActive) {
         return(
@@ -57,7 +83,7 @@ const ConditionalProbability = ({isActive, letterInfos}: Props) => {
     }
     return(
         <>
-            <FrameTitle>Prawdopodobieństwo warunkowe liter</FrameTitle>
+            <FrameTitle>Prawdopodobieństwo warunkowe liter {maxLetters}</FrameTitle>
             <UsageFrame maxHeight={200}>
                 <SimpleMarginFrame>
                     Najpopularniejsze litery: <br/>
@@ -67,17 +93,23 @@ const ConditionalProbability = ({isActive, letterInfos}: Props) => {
                 </SimpleMarginFrame>
                 <SimpleMarginFrame>
                     Prawdopodobieństwo warunkowe: <br/>
-                    <table>
-                        <tr>
-                            <th>Litera</th>
-                            <th>Prawdopodobieństwo po: {mostPopularLetters[0].letter == " " ? "SPACJA" : mostPopularLetters[0].letter}</th>
-                            <th>Prawdopodobieństwo po: {mostPopularLetters[1].letter == " " ? "SPACJA" : mostPopularLetters[1].letter}</th>
+                    <table style={{border: "solid black 1px"}}>
+                        <tr style={{border: "solid black 1px"}}>
+                            <th style={{border: "solid black 1px"}}>Litera</th>
+                            <th style={{border: "solid black 1px"}}>Prawdopodobieństwo po: {mostPopularLetters[0].letter == " " ? "SPACJA" : mostPopularLetters[0].letter}</th>
+                            <th style={{border: "solid black 1px"}}>Prawdopodobieństwo po: {mostPopularLetters[1].letter == " " ? "SPACJA" : mostPopularLetters[1].letter}</th>
                         </tr>
                         {letterInfos.map(letterInfo => {
                             return(
                                 <tr>
                                     <td>
                                         {letterInfo.letter == " " ? "SPACJA" : letterInfo.letter}
+                                    </td>
+                                    <td>
+                                        {letterInfo.propabilityAfter.get(mostPopularLetters[0].letter)}
+                                    </td>
+                                    <td>
+                                        {letterInfo.propabilityAfter.get(mostPopularLetters[1].letter)}
                                     </td>
                                 </tr>
                             )
