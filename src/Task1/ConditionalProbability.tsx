@@ -14,7 +14,7 @@ interface Props {
     maxLetters: number;
 }
 
-const ConditionalProbability = ({isActive, letterInfos, scannedText, maxLetters}: Props) => {
+const ConditionalProbability = ({isActive, letterInfos, scannedText, maxLetters, setLetterInfos}: Props) => {
     const [mostPopularLetters, setMostPopularLetters] = useState<LetterInfo[]>([]);
 
     const findMostPopularLetters = () => {
@@ -86,7 +86,7 @@ const ConditionalProbability = ({isActive, letterInfos, scannedText, maxLetters}
                 letterInfo.propabilityAfter.set(popularLetter.letter, conditionalPropability);
             });
         });
-        
+        setLetterInfos(letterInfos);
     }   
 
     useEffect(() => {

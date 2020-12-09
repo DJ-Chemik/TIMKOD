@@ -9,12 +9,9 @@ const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm'
 interface Props {
     isActive: boolean;
     letterInfos: LetterInfo[];
-    setLetterInfos: (value: LetterInfo[]) => void;
-    scannedText: any;
-    maxLetters: number;
 }
 
-const Markov1 = ({isActive, letterInfos, scannedText, maxLetters}: Props) => {
+const Markov1 = ({isActive, letterInfos}: Props) => {
     const [numberOfLetters, setNumberOfLetters] = useState<number>(0);
     const [textMarkov1, setTextMarkov1] = useState<string>('');
 
