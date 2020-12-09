@@ -9,11 +9,66 @@ const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm'
 interface Props {
     isActive: boolean;
     letterInfos: LetterInfo[];
+    setLetterInfos: (value: LetterInfo[]) => void;
+    scannedText: any;
+    maxLetters: number;
 }
 
-const Markov1 = ({isActive, letterInfos}: Props) => {
+const Markov3 = ({isActive, letterInfos, scannedText, maxLetters, setLetterInfos}: Props) => {
     const [numberOfLetters, setNumberOfLetters] = useState<number>(0);
-    const [textMarkov1, setTextMarkov1] = useState<string>('');
+    const [textMarkov3, setTextMarkov1] = useState<string>('');
+
+    const getOneLetter = (text: string, position: number) => {
+        return text[position];
+    }
+
+    const getKeysList = (iterators: IterableIterator<string>) => {
+        const allKeys: string[] = [];
+        let isToContinue= true;
+        while (isToContinue) {
+            const key = iterators.next().value;
+            if (key === undefined) {
+                isToContinue = false;
+                break;
+            }
+            allKeys.push(key);
+        }
+        return allKeys;
+    }
+
+    const findConditionalProbabilityMarkov3 = () => {
+        for (let i = 0; i < maxLetters; i++) {
+            const letter1 = getOneLetter(scannedText, i);
+            const letter2 = getOneLetter(scannedText, i+1);
+            const letters1 = letter1 + letter2;
+            const letter3 = getOneLetter(scannedText, i+2);
+            const foundLetterInfo3 = letterInfos.find(inf => inf.letter === letter3);
+            if (foundLetterInfo3) {
+                const keysIterators = foundLetterInfo3.propabilityAfter.keys();
+                const allKeysForLetter3 = getKeysList(keysIterators);
+                const isInTheDictionary = allKeysForLetter3.some(key => key === letters1);
+                if (!isInTheDictionary) {
+                    let value = foundLetterInfo3.propabilityAfter.get(letters1);
+                    if (value) {
+                        value++;
+                        if (letter3 === "e") {
+                            console.log(value, 'for [', letters1, "]");
+                        }
+                        foundLetterInfo3.propabilityAfter.set(letters1, value);
+                    }else {
+                        foundLetterInfo3.propabilityAfter.set(letters1, 1);
+                    }
+
+                }
+            }
+        }
+        console.log(letterInfos);
+        setLetterInfos(letterInfos);
+    }
+
+    useEffect(() => {
+        findConditionalProbabilityMarkov3();
+    }, [maxLetters, letterInfos]);
 
     const foundFirstLetter = (infos: LetterInfo[], random: number) => {
         const found = infos.find(info => {
@@ -29,8 +84,7 @@ const Markov1 = ({isActive, letterInfos}: Props) => {
 
         console.log("Zadziałało oszukiwanie typescripta. Coś poszło źle jednak");
         return ""; // Żeby oszukać typescripta
-    }
-    
+    }    
 
     const generateText = () => {
         let text = '';
@@ -70,19 +124,19 @@ const Markov1 = ({isActive, letterInfos}: Props) => {
     if (!isActive) {
         return(
             <Unavailable 
-                title="Przybliżenie Markova 1 rzędu"
+                title="Przybliżenie Markova 3 rzędu"
                 description="NAJPIERW ZBADAJ CZĘSTOŚĆ WYSTĘPOWANIA LITER"
             />
         )
     }
     return(
         <>
-            <FrameTitle>Przybliżenie Markova 1 rzędu</FrameTitle>
+            <FrameTitle>Przybliżenie Markova 3 rzędu</FrameTitle>
             <UsageFrame maxHeight={200}>
                 <input placeholder="Ile liter wygenerować?" type='number' onChange={handleChangeNumberOfLetters}/>
                 <button onClick={generateText}>Wygeneruj tekst</button>
                 <SimpleMarginFrame>
-                    {textMarkov1}
+                    {textMarkov3}
                 </SimpleMarginFrame>
                 <SimpleMarginFrame>
 
@@ -92,4 +146,4 @@ const Markov1 = ({isActive, letterInfos}: Props) => {
     )
 }
 
-export default Markov1;
+export default Markov3;
