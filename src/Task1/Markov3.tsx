@@ -52,9 +52,6 @@ const Markov3 = ({isActive, letterInfos, scannedText, maxLetters, setLetterInfos
                     let value = foundLetterInfo3.propabilityAfter.get(letters1);
                     if (value) {
                         value++;
-                        if (letter4 === "e") {
-                            console.log(value, 'for [', letters1, "]");
-                        }
                         foundLetterInfo3.propabilityAfter.set(letters1, value);
                     }else {
                         foundLetterInfo3.propabilityAfter.set(letters1, 1);
@@ -63,7 +60,6 @@ const Markov3 = ({isActive, letterInfos, scannedText, maxLetters, setLetterInfos
                 }
             }
         }
-        console.log(letterInfos);
         setLetterInfos(letterInfos);
     }
 

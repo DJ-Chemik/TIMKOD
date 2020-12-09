@@ -18,8 +18,10 @@ const Markov1 = ({isActive, letterInfos}: Props) => {
     const foundFirstLetter = (infos: LetterInfo[], random: number) => {
         const found = infos.find(info => {
             if (info.probability >= random) {
+                console.log(info);                
                 return info;
             }else {
+                console.log(false);
                 random = random - info.probability;
             }
         });
