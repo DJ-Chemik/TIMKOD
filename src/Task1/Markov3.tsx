@@ -40,9 +40,10 @@ const Markov3 = ({isActive, letterInfos, scannedText, maxLetters, setLetterInfos
         for (let i = 0; i < maxLetters; i++) {
             const letter1 = getOneLetter(scannedText, i);
             const letter2 = getOneLetter(scannedText, i+1);
-            const letters1 = letter1 + letter2;
             const letter3 = getOneLetter(scannedText, i+2);
-            const foundLetterInfo3 = letterInfos.find(inf => inf.letter === letter3);
+            const letters1 = letter1 + letter2 + letter3;
+            const letter4 = getOneLetter(scannedText, i+3);
+            const foundLetterInfo3 = letterInfos.find(inf => inf.letter === letter4);
             if (foundLetterInfo3) {
                 const keysIterators = foundLetterInfo3.propabilityAfter.keys();
                 const allKeysForLetter3 = getKeysList(keysIterators);
@@ -51,7 +52,7 @@ const Markov3 = ({isActive, letterInfos, scannedText, maxLetters, setLetterInfos
                     let value = foundLetterInfo3.propabilityAfter.get(letters1);
                     if (value) {
                         value++;
-                        if (letter3 === "e") {
+                        if (letter4 === "e") {
                             console.log(value, 'for [', letters1, "]");
                         }
                         foundLetterInfo3.propabilityAfter.set(letters1, value);
