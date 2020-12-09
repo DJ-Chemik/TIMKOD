@@ -68,7 +68,16 @@ const ConditionalProbability = ({isActive, letterInfos, scannedText, maxLetters}
     }
 
     const findConditionalPropability = () => {
-        mostPopularLetters.map((popularLetter) => {
+        // mostPopularLetters.map((popularLetter) => {
+        //     letterInfos.map((letterInfo) => {
+        //         const bigram = popularLetter.letter + letterInfo.letter;
+        //         const probabilityOfPopularLetter = popularLetter.probability;
+        //         const propabilityOfBigram = checkProbabilityForString(bigram);
+        //         const conditionalPropability = propabilityOfBigram / probabilityOfPopularLetter;
+        //         letterInfo.propabilityAfter.set(popularLetter.letter, conditionalPropability);
+        //     });
+        // });
+        letterInfos.map((popularLetter) => {
             letterInfos.map((letterInfo) => {
                 const bigram = popularLetter.letter + letterInfo.letter;
                 const probabilityOfPopularLetter = popularLetter.probability;
