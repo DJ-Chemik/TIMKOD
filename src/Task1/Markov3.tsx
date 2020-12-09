@@ -36,7 +36,14 @@ const Markov3 = ({isActive, letterInfos, scannedText, maxLetters, setLetterInfos
         return allKeys;
     }
 
+    interface NewValue {
+        letter: string;
+        key: string;
+        count: number;
+    }
+
     const findConditionalProbabilityMarkov3 = () => {
+        const newValues: NewValue[]  = [];
         for (let i = 0; i < maxLetters; i++) {
             const letter1 = getOneLetter(scannedText, i);
             const letter2 = getOneLetter(scannedText, i+1);
@@ -45,21 +52,27 @@ const Markov3 = ({isActive, letterInfos, scannedText, maxLetters, setLetterInfos
             const letter4 = getOneLetter(scannedText, i+3);
             const foundLetterInfo3 = letterInfos.find(inf => inf.letter === letter4);
             if (foundLetterInfo3) {
-                const keysIterators = foundLetterInfo3.propabilityAfter.keys();
-                const allKeysForLetter3 = getKeysList(keysIterators);
-                const isInTheDictionary = allKeysForLetter3.some(key => key === letters1);
-                if (!isInTheDictionary) {
-                    let value = foundLetterInfo3.propabilityAfter.get(letters1);
-                    if (value) {
-                        value++;
-                        foundLetterInfo3.propabilityAfter.set(letters1, value);
-                    }else {
-                        foundLetterInfo3.propabilityAfter.set(letters1, 1);
-                    }
+                const foundNewValue = newValues.filter(x => x.letter === letter4).find(x => x.key === letters1);
+                if (!foundNewValue) {
+                    const newValue: NewValue = {
+                        letter: letter4,
+                        key: letters1,
+                        count: 1,
+                    } 
+                    newValues.push(newValue);
 
+                }else {
+                    foundNewValue.count = foundNewValue.count + 1;
                 }
             }
         }
+        newValues.forEach(newValue => {
+            const foundLetterInfo = letterInfos.find(letterInfo => letterInfo.letter === newValue.letter);
+            if (foundLetterInfo) {
+                const probability = newValue.count / maxLetters;
+                foundLetterInfo.propabilityAfter.set(newValue.key, probability);    
+            }
+        });
         setLetterInfos(letterInfos);
     }
 
@@ -81,22 +94,48 @@ const Markov3 = ({isActive, letterInfos, scannedText, maxLetters, setLetterInfos
 
         console.log("Zadziałało oszukiwanie typescripta. Coś poszło źle jednak");
         return ""; // Żeby oszukać typescripta
-    }    
+    }   
+    
+    const foundLetterWithMarkov1 = (infos: LetterInfo[], random: number, prevLetter: string) => {
+        const found = infos.find(info => {
+            const prob = info.propabilityAfter.get(prevLetter);
+            if (prob) {
+                if (prob >= random) {
+                    return info;
+                }else {
+                    random = random - prob;
+                }
+            }
+        });
+        if (found) {
+            return found.letter;
+        }
+        return "";
+    }
 
     const generateText = () => {
         let text = '';
         const infos = [...letterInfos];
         
         let previousLetter = "";
+        let prevThreeLetters = ""
         for (let i = 0; i < numberOfLetters; i++) {
             let random = Math.random();
             if (i === 0) {
                 previousLetter = foundFirstLetter(infos, random);
+                prevThreeLetters += previousLetter;
                 text += previousLetter;
                 continue;
             }
+            if (i <= 2) {
+                previousLetter = foundLetterWithMarkov1(infos, random, previousLetter);
+                prevThreeLetters += previousLetter;
+                text += previousLetter;
+                continue;
+            }
+
             const found = infos.find(info => {
-                const prob = info.propabilityAfter.get(previousLetter);
+                const prob = info.propabilityAfter.get(prevThreeLetters);
                 if (prob) {
                     if (prob >= random) {
                         return info;
@@ -106,9 +145,9 @@ const Markov3 = ({isActive, letterInfos, scannedText, maxLetters, setLetterInfos
                 }
             });
             if (found) {
-                previousLetter = found.letter;
-                text += previousLetter;
-            }  
+                
+            }
+              
   
         }
         setTextMarkov1(text);
