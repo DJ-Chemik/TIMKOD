@@ -82,6 +82,9 @@ const ConditionalProbability = ({isActive, letterInfos, scannedText, maxLetters}
 
     useEffect(() => {
         findMostPopularLetters();
+    }, [maxLetters, letterInfos])
+
+    useEffect(() => {
         if (maxLetters && mostPopularLetters.length) {
             findConditionalPropability();
         }
