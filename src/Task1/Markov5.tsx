@@ -86,22 +86,6 @@ const Markov5 = ({isActive, letterInfos, scannedText, maxLetters, setLetterInfos
         findConditionalProbabilityMarkov5();
     }, [maxLetters, letterInfos]);
 
-    const findFirstLetter = (infos: LetterInfo[], random: number) => {
-        const found = infos.find(info => {
-            if (info.probability >= random) {
-                return info;
-            }else {
-                random = random - info.probability;
-            }
-        });
-        if (found) {
-            return found.letter;
-        }  
-
-        console.log("Zadziałało oszukiwanie typescripta. Coś poszło źle jednak");
-        return ""; // Żeby oszukać typescripta
-    }   
-    
     const findLetterWithMarkov1 = (infos: LetterInfo[], random: number, prevLetter: string) => {
         const found = infos.find(info => {
             const prob = info.propabilityAfter.get(prevLetter);
@@ -120,26 +104,14 @@ const Markov5 = ({isActive, letterInfos, scannedText, maxLetters, setLetterInfos
     }
 
     const generateText = () => {
-        let text = '';
+        let text = 'probability';
         const infos = [...letterInfos];
         
         let previousLetter = "";
         let prevThreeLetters = "";
         for (let i = 0; i < numberOfLetters; i++) {
             let random = Math.random();
-            if (i === 0) {
-                previousLetter = findFirstLetter(infos, random);
-                prevThreeLetters += previousLetter;
-                text += previousLetter;
-                continue;
-            }
-            if (i <= 2) {
-                previousLetter = findLetterWithMarkov1(infos, random, previousLetter);
-                prevThreeLetters += previousLetter;
-                text += previousLetter;
-                continue;
-            }
-            
+                        
             let found = infos.find(info => {
                 const allKeys = getKeysList(info.propabilityAfter.keys());
                 const prob = info.propabilityAfter.get(prevThreeLetters);
