@@ -58,6 +58,7 @@ const Task1Main = () => {
                         <ConditionalProbability 
                             isActive={!!letterInfos[0].probability} 
                             letterInfos={letterInfos} 
+                            setLetterInfos={setLetterInfos}
                             scannedText={scannedText} 
                             maxLetters={maxScannedLetters}
                         />

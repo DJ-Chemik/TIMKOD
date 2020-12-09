@@ -9,6 +9,7 @@ const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm'
 interface Props {
     isActive: boolean;
     letterInfos: LetterInfo[];
+    setLetterInfos: (value: LetterInfo[]) => void;
     scannedText: any;
     maxLetters: number;
 }
@@ -47,9 +48,23 @@ const ConditionalProbability = ({isActive, letterInfos, scannedText, maxLetters}
         }
     }
 
+    const getOneLetter = (text: string, position: number) => {
+        return text[position];
+    }
+
     const checkProbabilityForString = (text: string) => {
-        
-        return -1;
+        let sumCount = 0;
+        let textCount = 0;
+
+        for (let i = 0; i < maxLetters; i++) {
+            const letter1 = getOneLetter(scannedText, i);
+            const letter2 = getOneLetter(scannedText, i+1);
+            if (letter1 + letter2 === text) {
+                textCount++;
+            }
+            sumCount++;
+        }
+        return textCount / sumCount;
     }
 
     const findConditionalPropability = () => {
@@ -57,11 +72,12 @@ const ConditionalProbability = ({isActive, letterInfos, scannedText, maxLetters}
             letterInfos.map((letterInfo) => {
                 const bigram = popularLetter.letter + letterInfo.letter;
                 const probabilityOfPopularLetter = popularLetter.probability;
-                const propabilityOfBigram = checkProbabilityForString(bigram); //TODO
+                const propabilityOfBigram = checkProbabilityForString(bigram);
                 const conditionalPropability = propabilityOfBigram / probabilityOfPopularLetter;
                 letterInfo.propabilityAfter.set(popularLetter.letter, conditionalPropability);
             });
-        })
+        });
+        
     }   
 
     useEffect(() => {
@@ -101,16 +117,18 @@ const ConditionalProbability = ({isActive, letterInfos, scannedText, maxLetters}
                             <th style={{border: "solid black 1px"}}>Prawdopodobieństwo po: {mostPopularLetters[1].letter === " " ? "SPACJA" : mostPopularLetters[1].letter}</th>
                         </tr>
                         {letterInfos.map(letterInfo => {
+                            const prob1 = letterInfo.propabilityAfter.get(mostPopularLetters[0].letter);
+                            const prob2 = letterInfo.propabilityAfter.get(mostPopularLetters[1].letter);
                             return(
                                 <tr>
                                     <td>
                                         {letterInfo.letter === " " ? "SPACJA" : letterInfo.letter}
                                     </td>
                                     <td>
-                                        {letterInfo.propabilityAfter.get(mostPopularLetters[0].letter)}
+                                        {prob1 !== undefined ? `${prob1*100}%` : "???"}
                                     </td>
                                     <td>
-                                        {letterInfo.propabilityAfter.get(mostPopularLetters[1].letter)}
+                                        {prob2 !== undefined ? `${prob2*100}%` : "???"}
                                     </td>
                                 </tr>
                             )
