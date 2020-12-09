@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { createGlobalStyle } from 'styled-components';
 import { FrameTitle, SimpleMarginFrame, UsageFrame } from './Task1.styled';
 import { LetterInfo } from './Task1Main';
 import Unavailable from './Unavailable';
@@ -14,9 +13,9 @@ interface Props {
     maxLetters: number;
 }
 
-const Markov3 = ({isActive, letterInfos, scannedText, maxLetters, setLetterInfos}: Props) => {
+const Markov5 = ({isActive, letterInfos, scannedText, maxLetters, setLetterInfos}: Props) => {
     const [numberOfLetters, setNumberOfLetters] = useState<number>(0);
-    const [textMarkov3, setTextMarkov3] = useState<string>('');
+    const [textMarkov5, setTextMarkov5] = useState<string>('');
 
     const getOneLetter = (text: string, position: number) => {
         return text[position];
@@ -42,20 +41,22 @@ const Markov3 = ({isActive, letterInfos, scannedText, maxLetters, setLetterInfos
         count: number;
     }
 
-    const findConditionalProbabilityMarkov3 = () => {
+    const findConditionalProbabilityMarkov5 = () => {
         const newValues: NewValue[]  = [];
         for (let i = 0; i < maxLetters; i++) {
             const letter1 = getOneLetter(scannedText, i);
             const letter2 = getOneLetter(scannedText, i+1);
             const letter3 = getOneLetter(scannedText, i+2);
-            const letters1 = letter1 + letter2 + letter3;
             const letter4 = getOneLetter(scannedText, i+3);
-            const foundLetterInfo3 = letterInfos.find(inf => inf.letter === letter4);
+            const letter5 = getOneLetter(scannedText, i+4);
+            const letters1 = letter1 + letter2 + letter3 + letter4 + letter5;
+            const letter6 = getOneLetter(scannedText, i+5);
+            const foundLetterInfo3 = letterInfos.find(inf => inf.letter === letter6);
             if (foundLetterInfo3) {
-                const foundNewValue = newValues.filter(x => x.letter === letter4).find(x => x.key === letters1);
+                const foundNewValue = newValues.filter(x => x.letter === letter6).find(x => x.key === letters1);
                 if (!foundNewValue) {
                     const newValue: NewValue = {
-                        letter: letter4,
+                        letter: letter6,
                         key: letters1,
                         count: 1,
                     } 
@@ -81,7 +82,7 @@ const Markov3 = ({isActive, letterInfos, scannedText, maxLetters, setLetterInfos
     }
 
     useEffect(() => {
-        findConditionalProbabilityMarkov3();
+        findConditionalProbabilityMarkov5();
     }, [maxLetters, letterInfos]);
 
     const findFirstLetter = (infos: LetterInfo[], random: number) => {
@@ -118,59 +119,7 @@ const Markov3 = ({isActive, letterInfos, scannedText, maxLetters, setLetterInfos
     }
 
     const generateText = () => {
-        let text = '';
-        const infos = [...letterInfos];
         
-        let previousLetter = "";
-        let prevThreeLetters = "";
-        for (let i = 0; i < numberOfLetters; i++) {
-            let random = Math.random();
-            if (i === 0) {
-                previousLetter = findFirstLetter(infos, random);
-                prevThreeLetters += previousLetter;
-                text += previousLetter;
-                continue;
-            }
-            if (i <= 2) {
-                previousLetter = findLetterWithMarkov1(infos, random, previousLetter);
-                prevThreeLetters += previousLetter;
-                text += previousLetter;
-                continue;
-            }
-            
-            let found = infos.find(info => {
-                const allKeys = getKeysList(info.propabilityAfter.keys());
-                const prob = info.propabilityAfter.get(prevThreeLetters);
-                if (prob) {
-                    console.log(prob)
-                    if (prob >= random) {
-                        return info;
-                    }else {
-                        random = random - prob;
-                    }
-                }
-            });
-
-            // GDYBY nie odnalazło przy żadnej literce poprzedniego paternu
-            if (found === undefined) {
-                const letter = findLetterWithMarkov1(infos, random, previousLetter);
-                found = infos.find(info => info.letter === letter);
-                prevThreeLetters += previousLetter;
-                if (prevThreeLetters.length > 3) {
-                    prevThreeLetters = prevThreeLetters.slice(1,4);
-                }
-                text += previousLetter;
-            }
-            if (found) {
-                previousLetter = found.letter;
-                prevThreeLetters += previousLetter;
-                if (prevThreeLetters.length > 3) {
-                    prevThreeLetters = prevThreeLetters.slice(1,4);
-                }
-                text += previousLetter;
-            }
-        }
-        setTextMarkov3(text);
     }
 
     const handleChangeNumberOfLetters = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -180,19 +129,19 @@ const Markov3 = ({isActive, letterInfos, scannedText, maxLetters, setLetterInfos
     if (!isActive) {
         return(
             <Unavailable 
-                title="Przybliżenie Markova 3 rzędu"
+                title="Przybliżenie Markova 5 rzędu"
                 description="NAJPIERW ZBADAJ CZĘSTOŚĆ WYSTĘPOWANIA LITER"
             />
         )
     }
     return(
         <>
-            <FrameTitle>Przybliżenie Markova 3 rzędu</FrameTitle>
+            <FrameTitle>Przybliżenie Markova 5 rzędu</FrameTitle>
             <UsageFrame maxHeight={200}>
                 <input placeholder="Ile liter wygenerować?" type='number' onChange={handleChangeNumberOfLetters}/>
                 <button onClick={generateText}>Wygeneruj tekst</button>
                 <SimpleMarginFrame>
-                    {textMarkov3}
+                    {textMarkov5}
                 </SimpleMarginFrame>
                 <SimpleMarginFrame>
 
@@ -202,4 +151,4 @@ const Markov3 = ({isActive, letterInfos, scannedText, maxLetters, setLetterInfos
     )
 }
 
-export default Markov3;
+export default Markov5;

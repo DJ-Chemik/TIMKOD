@@ -6,6 +6,7 @@ import ConditionalProbability from './ConditionalProbability';
 import LettersFrequency from './LettersFrequency';
 import Markov1 from './Markov1';
 import Markov3 from './Markov3';
+import Markov5 from './Markov5';
 import { Background, ContentBody, FrameTitle, SimpleMarginFrame, TitleHeader, UsageFrame } from './Task1.styled';
 import TextScanner from './TextScanner';
 
@@ -77,6 +78,17 @@ const Task1Main = () => {
                 {letterInfos.length && 
                     <>
                         <Markov3
+                            isActive={!!letterInfos[0].probability} 
+                            letterInfos={letterInfos} 
+                            setLetterInfos={setLetterInfos}
+                            scannedText={scannedText}
+                            maxLetters={maxScannedLetters}
+                        />
+                    </>
+                }
+                {letterInfos.length && 
+                    <>
+                        <Markov5
                             isActive={!!letterInfos[0].probability} 
                             letterInfos={letterInfos} 
                             setLetterInfos={setLetterInfos}
