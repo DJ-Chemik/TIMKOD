@@ -120,7 +120,59 @@ const Markov5 = ({isActive, letterInfos, scannedText, maxLetters, setLetterInfos
     }
 
     const generateText = () => {
+        let text = '';
+        const infos = [...letterInfos];
         
+        let previousLetter = "";
+        let prevThreeLetters = "";
+        for (let i = 0; i < numberOfLetters; i++) {
+            let random = Math.random();
+            if (i === 0) {
+                previousLetter = findFirstLetter(infos, random);
+                prevThreeLetters += previousLetter;
+                text += previousLetter;
+                continue;
+            }
+            if (i <= 2) {
+                previousLetter = findLetterWithMarkov1(infos, random, previousLetter);
+                prevThreeLetters += previousLetter;
+                text += previousLetter;
+                continue;
+            }
+            
+            let found = infos.find(info => {
+                const allKeys = getKeysList(info.propabilityAfter.keys());
+                const prob = info.propabilityAfter.get(prevThreeLetters);
+                if (prob) {
+                    console.log(prob)
+                    if (prob >= random) {
+                        return info;
+                    }else {
+                        random = random - prob;
+                    }
+                }
+            });
+
+            // GDYBY nie odnalazło przy żadnej literce poprzedniego paternu
+            if (found === undefined) {
+                const letter = findLetterWithMarkov1(infos, random, previousLetter);
+                found = infos.find(info => info.letter === letter);
+                prevThreeLetters += previousLetter;
+                if (prevThreeLetters.length > 3) {
+                    prevThreeLetters = prevThreeLetters.slice(1,4);
+                }
+                text += previousLetter;
+            }
+            if (found) {
+                previousLetter = found.letter;
+                prevThreeLetters += previousLetter;
+                if (prevThreeLetters.length > 3) {
+                    prevThreeLetters = prevThreeLetters.slice(1,4);
+                }
+                text += previousLetter;
+            }
+        }
+        setTextMarkov5(text);
     }
 
     const handleChangeNumberOfLetters = (event: React.ChangeEvent<HTMLInputElement>) => {
