@@ -42,12 +42,17 @@ const Task1Main = () => {
         return fragment;       
     }
 
+    const getAverageWordLength = (text: string) => {
+        const words = text.split(' ');
+        return text.length / words.length;
+    }
+
     return(
         <Background>
             <TitleHeader> Task 1 </TitleHeader>
             <ContentBody>
                 <TextScanner scannedText={scannedText} setScannedText={setScannedText}/>
-                <Approximation0/>
+                <Approximation0 getAverageWordLength={getAverageWordLength}/>
                 <LettersFrequency
                     isActive={scannedText.length}
                     scannedText={scannedText} 
@@ -57,7 +62,7 @@ const Task1Main = () => {
                 />
                 {letterInfos.length && 
                     <>
-                        <Approximation1 isActive={!!letterInfos[0].probability} letterInfos={letterInfos}/>
+                        <Approximation1 isActive={!!letterInfos[0].probability} letterInfos={letterInfos} getAverageWordLength={getAverageWordLength}/>
                         <ConditionalProbability 
                             isActive={!!letterInfos[0].probability} 
                             letterInfos={letterInfos} 
@@ -72,6 +77,7 @@ const Task1Main = () => {
                         <Markov1
                             isActive={!!letterInfos[0].probability} 
                             letterInfos={letterInfos} 
+                            getAverageWordLength={getAverageWordLength}
                         />
                     </>
                 }
@@ -83,6 +89,7 @@ const Task1Main = () => {
                             setLetterInfos={setLetterInfos}
                             scannedText={scannedText}
                             maxLetters={maxScannedLetters}
+                            getAverageWordLength={getAverageWordLength}
                         />
                     </>
                 }
@@ -94,6 +101,7 @@ const Task1Main = () => {
                             setLetterInfos={setLetterInfos}
                             scannedText={scannedText}
                             maxLetters={maxScannedLetters}
+                            getAverageWordLength={getAverageWordLength}
                         />
                     </>
                 }

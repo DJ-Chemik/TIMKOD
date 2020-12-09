@@ -12,9 +12,10 @@ interface Props {
     setLetterInfos: (value: LetterInfo[]) => void;
     scannedText: any;
     maxLetters: number;
+    getAverageWordLength: (text: string) => number;
 }
 
-const Markov3 = ({isActive, letterInfos, scannedText, maxLetters, setLetterInfos}: Props) => {
+const Markov3 = ({isActive, letterInfos, scannedText, maxLetters, setLetterInfos, getAverageWordLength}: Props) => {
     const [numberOfLetters, setNumberOfLetters] = useState<number>(0);
     const [textMarkov3, setTextMarkov3] = useState<string>('');
 
@@ -191,6 +192,9 @@ const Markov3 = ({isActive, letterInfos, scannedText, maxLetters, setLetterInfos
             <UsageFrame maxHeight={200}>
                 <input placeholder="Ile liter wygenerować?" type='number' onChange={handleChangeNumberOfLetters}/>
                 <button onClick={generateText}>Wygeneruj tekst</button>
+                <SimpleMarginFrame>
+                    Średnia długość słowa: { getAverageWordLength(textMarkov3)}
+                </SimpleMarginFrame>
                 <SimpleMarginFrame>
                     {textMarkov3}
                 </SimpleMarginFrame>

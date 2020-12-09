@@ -5,10 +5,10 @@ import { FrameTitle, UsageFrame, SimpleMarginFrame } from './Task1.styled';
 const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'x', 'y', 'z', ' '];
 
 interface Props {
-
+    getAverageWordLength: (text: string) => number;
 }
 
-const Approximation0 = ({}: Props) => {
+const Approximation0 = ({getAverageWordLength}: Props) => {
     const [textWithApproximation0, setTextWithApproximation0] = useState<string>('');
     const [numberOfLetters, setNumberOfLetters] = useState<number>(0);
 
@@ -34,6 +34,9 @@ const Approximation0 = ({}: Props) => {
             <UsageFrame maxHeight={200}>
                 <input placeholder="Ile liter wygenerować?" type='number' onChange={handleChangeNumberOfLetters}/>
                 <button onClick={generateText0}>Wygeneruj tekst</button>
+                <SimpleMarginFrame>
+                    Średnia długość słowa: { getAverageWordLength(textWithApproximation0)}
+                </SimpleMarginFrame>
                 <SimpleMarginFrame>
                     {textWithApproximation0}
                 </SimpleMarginFrame>

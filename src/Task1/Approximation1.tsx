@@ -9,9 +9,10 @@ const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm'
 interface Props {
     isActive: boolean;
     letterInfos: LetterInfo[];
+    getAverageWordLength: (text: string) => number;
 }
 
-const Approximation1 = ({isActive, letterInfos}: Props) => {
+const Approximation1 = ({isActive, letterInfos, getAverageWordLength}: Props) => {
     const [numberOfLetters, setNumberOfLetters] = useState<number>(0);
     const [textWithApproximation1, setTextWithApproximation1] = useState<string>('');
 
@@ -55,6 +56,9 @@ const Approximation1 = ({isActive, letterInfos}: Props) => {
             <UsageFrame maxHeight={200}>
                 <input placeholder="Ile liter wygenerować?" type='number' onChange={handleChangeNumberOfLetters}/>
                 <button onClick={generateText1}>Wygeneruj tekst</button>
+                <SimpleMarginFrame>
+                    Średnia długość słowa: { getAverageWordLength(textWithApproximation1)}
+                </SimpleMarginFrame>
                 <SimpleMarginFrame>
                     {textWithApproximation1}
                 </SimpleMarginFrame>
