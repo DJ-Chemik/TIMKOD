@@ -29,7 +29,7 @@ const ConditionalProbability = ({isActive, letterInfos, scannedText, maxLetters}
                 acc.push(cur);
                 return acc;
             }
-            if (acc.length == 1) {
+            if (acc.length === 1) {
                 acc.push(cur);
                 const sorted = acc.sort((a, b) => b.probability - a.probability);
                 return sorted;
@@ -56,7 +56,6 @@ const ConditionalProbability = ({isActive, letterInfos, scannedText, maxLetters}
         mostPopularLetters.map((popularLetter) => {
             letterInfos.map((letterInfo) => {
                 const bigram = popularLetter.letter + letterInfo.letter;
-                console.log('bigram: [', bigram);
                 const probabilityOfPopularLetter = popularLetter.probability;
                 const propabilityOfBigram = checkProbabilityForString(bigram); //TODO
                 const conditionalPropability = propabilityOfBigram / probabilityOfPopularLetter;
@@ -70,8 +69,10 @@ const ConditionalProbability = ({isActive, letterInfos, scannedText, maxLetters}
     }, [letterInfos]);
 
     useEffect(() => {
-        findConditionalPropability();
-    }, [mostPopularLetters]);
+        if (maxLetters && mostPopularLetters.length) {
+            findConditionalPropability();
+        }
+    }, [mostPopularLetters, maxLetters]);
 
     if (!isActive) {
         return(
@@ -83,12 +84,12 @@ const ConditionalProbability = ({isActive, letterInfos, scannedText, maxLetters}
     }
     return(
         <>
-            <FrameTitle>Prawdopodobieństwo warunkowe liter {maxLetters}</FrameTitle>
+            <FrameTitle>Prawdopodobieństwo warunkowe liter</FrameTitle>
             <UsageFrame maxHeight={200}>
                 <SimpleMarginFrame>
                     Najpopularniejsze litery: <br/>
                     {mostPopularLetters.map(info => `
-                        ${info.letter == " " ? "SPACJA" : info.letter}: ${info.probability * 100}%,   
+                        ${info.letter === " " ? "SPACJA" : info.letter}: ${info.probability * 100}%,   
                     ` )}
                 </SimpleMarginFrame>
                 <SimpleMarginFrame>
@@ -96,14 +97,14 @@ const ConditionalProbability = ({isActive, letterInfos, scannedText, maxLetters}
                     <table style={{border: "solid black 1px"}}>
                         <tr style={{border: "solid black 1px"}}>
                             <th style={{border: "solid black 1px"}}>Litera</th>
-                            <th style={{border: "solid black 1px"}}>Prawdopodobieństwo po: {mostPopularLetters[0].letter == " " ? "SPACJA" : mostPopularLetters[0].letter}</th>
-                            <th style={{border: "solid black 1px"}}>Prawdopodobieństwo po: {mostPopularLetters[1].letter == " " ? "SPACJA" : mostPopularLetters[1].letter}</th>
+                            <th style={{border: "solid black 1px"}}>Prawdopodobieństwo po: {mostPopularLetters[0].letter === " " ? "SPACJA" : mostPopularLetters[0].letter}</th>
+                            <th style={{border: "solid black 1px"}}>Prawdopodobieństwo po: {mostPopularLetters[1].letter === " " ? "SPACJA" : mostPopularLetters[1].letter}</th>
                         </tr>
                         {letterInfos.map(letterInfo => {
                             return(
                                 <tr>
                                     <td>
-                                        {letterInfo.letter == " " ? "SPACJA" : letterInfo.letter}
+                                        {letterInfo.letter === " " ? "SPACJA" : letterInfo.letter}
                                     </td>
                                     <td>
                                         {letterInfo.propabilityAfter.get(mostPopularLetters[0].letter)}
