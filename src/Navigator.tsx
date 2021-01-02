@@ -20,6 +20,14 @@ const Navigator = ({changeContent} : NavigatorProps) => {
                     onClick={() => changeContent(Content.Task1)}
                 />
             </div>
+            <div style={{display: 'flex', margin: '8px'}}>
+                <Button 
+                    value='Task 2 (Lab3)' 
+                    width='10rem' 
+                    height='3rem'
+                    onClick={() => changeContent(Content.Task2)}
+                />
+            </div>
         </div>
     );
 }
