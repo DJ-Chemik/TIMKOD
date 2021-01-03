@@ -88,15 +88,20 @@ const Ex1 = (props: Ex1Props) => {
         )
     }
 
+    const findPercentFromPopular = (numberOfWords: number) => {
+        
+    }
+
     const KEY: any = "the";
     return(
         <>
         <FrameTitle>Ex 1</FrameTitle>
         <UsageFrame maxHeight={200}>
             <SimpleMarginFrame>
-                {
-                    frequenciesDictionary[KEY]
-                }
+                <div>
+                    30 tysięcy najpopularniejszych słów stanowi <strong>{}%</strong> całości <br/>
+                    6 tysięcy najpopularniejszych słów stanowi <strong>{}%</strong> całości
+                </div>
             </SimpleMarginFrame>
         </UsageFrame>
         </>
