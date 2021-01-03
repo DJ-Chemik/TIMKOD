@@ -14,7 +14,7 @@ const Task2Main = () => {
             <TitleHeader> Task 2 </TitleHeader>
             <ContentBody>
                 <TextScanner scannedText={scannedText} setScannedText={setScannedText}/>
-                <Ex1 />
+                <Ex1 text={scannedText}/>
                 <Ex2 />
                 <Ex3 />
             </ContentBody>
