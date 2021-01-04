@@ -1,7 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FrameTitle, UsageFrame, SimpleMarginFrame } from './Task2.styled';
 
 const Ex2 = () => {
+    const [isLoading, setLoading] = useState<boolean>(true);
+
+    if (isLoading) {
+        return(
+            <div>
+                Ex 2 Loading
+            </div>
+        )
+    }
 
     return(
         <>
