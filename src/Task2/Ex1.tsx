@@ -89,6 +89,8 @@ const Ex1 = (props: Ex1Props) => {
     }
 
     const findPercentFromPopular = (numberOfWords: number) => {
+        console.log('XXX', frequenciesTable.length);
+        return numberOfWords / frequenciesTable.length * 100;
         
     }
 
@@ -99,8 +101,8 @@ const Ex1 = (props: Ex1Props) => {
         <UsageFrame maxHeight={200}>
             <SimpleMarginFrame>
                 <div>
-                    30 tysięcy najpopularniejszych słów stanowi <strong>{}%</strong> całości <br/>
-                    6 tysięcy najpopularniejszych słów stanowi <strong>{}%</strong> całości
+                    30 tysięcy najpopularniejszych słów stanowi <strong>{findPercentFromPopular(30000)}%</strong> całości <br/>
+                    6 tysięcy najpopularniejszych słów stanowi <strong>{findPercentFromPopular(6000)}%</strong> całości
                 </div>
             </SimpleMarginFrame>
         </UsageFrame>
