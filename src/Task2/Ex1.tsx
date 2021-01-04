@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { FrameTitle, UsageFrame, SimpleMarginFrame } from './Task2.styled';
-import { valueToNode } from '@babel/types';
-import { any, number } from 'prop-types';
+import { DictionaryWord } from './Task2Main';
 
 interface Ex1Props {
     text: string;
-}
-
-interface DictionaryWord {
-    key: any;
-    value: number;
+    setMainDictionary: (data: any) => void;
+    setMainTable: (data: DictionaryWord[]) => void;
 }
 
 const Ex1 = (props: Ex1Props) => {
@@ -48,7 +44,7 @@ const Ex1 = (props: Ex1Props) => {
         // const limitedWords = words.splice(0, 1840508);
         // const limitedWords = words.splice(0);
         words.forEach(word => {
-            console.log(numberOfWords);
+            // console.log(numberOfWords);
             let isInDictionary = false;
             if (dict[word]) {
                 isInDictionary = true;
@@ -76,9 +72,12 @@ const Ex1 = (props: Ex1Props) => {
     useEffect(() => {
         setLoading(true);
         calculate();
-        
     }, [props.text]);
     
+    useEffect(() => {
+        props.setMainDictionary(frequenciesDictionary);
+        props.setMainTable(frequenciesTable);
+    }, [frequenciesDictionary, frequenciesTable]);
 
     if (isLoading) {
         return(
@@ -89,9 +88,7 @@ const Ex1 = (props: Ex1Props) => {
     }
 
     const findPercentFromPopular = (numberOfWords: number) => {
-        console.log('XXX', frequenciesTable.length);
         return numberOfWords / frequenciesTable.length * 100;
-        
     }
 
     const KEY: any = "the";
