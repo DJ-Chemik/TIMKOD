@@ -4,7 +4,7 @@ import { Background, ContentBody, FrameTitle, SimpleMarginFrame, TitleHeader, Us
 import TextScanner from './TextScanner';
 import Ex1 from './Ex1';
 import Ex2 from './Ex2';
-import Ex3 from './Ex3';
+import Ex3Markov1 from './Ex3Markov1';
 
 export interface DictionaryWord {
     key: any;
@@ -29,7 +29,11 @@ const Task2Main = () => {
                 <Ex2 
                     mainTable={frequenciesTable}
                 />
-                <Ex3 />
+                <Ex3Markov1 
+                    text={scannedText}
+                    mainTable={frequenciesTable}
+                    mainDictionary={frequenciesDictionary}
+                />
             </ContentBody>
         </Background>
     );

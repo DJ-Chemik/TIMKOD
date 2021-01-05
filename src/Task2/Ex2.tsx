@@ -13,7 +13,6 @@ const Ex2 = (props: Ex2Props) => {
     const randomWord = () => {
         let random = Math.random();
         const found = props.mainTable.find(word => {
-            console.log(word.key);
             if (word.value >= random) {
                 return word;
             }else {
