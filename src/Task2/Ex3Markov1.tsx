@@ -6,6 +6,7 @@ interface Ex3Props {
     text: string;
     mainTable: DictionaryWord[];
     mainDictionary: any;
+    setMarkov1Dict: (dict: any) => void;
 }
 
 const Ex3Markov1 = (props: Ex3Props) => {
@@ -29,7 +30,6 @@ const Ex3Markov1 = (props: Ex3Props) => {
         let x = 0;
         for (let key in markov1Dict[prevWord]) {
             const probability = markov1Dict[prevWord][key];
-            console.log('[Ex3_M1]probability', probability)
             x = x + probability;
             if (random <= x) {
                 return key;
@@ -53,7 +53,6 @@ const Ex3Markov1 = (props: Ex3Props) => {
             }
             markov1Dict[mainWord][secondWord] += 1;          
         }
-        console.log(markov1Dict);
         for (let key in markov1Dict) {
             let sum = 0;
             for (let it in markov1Dict[key]) {
@@ -76,6 +75,7 @@ const Ex3Markov1 = (props: Ex3Props) => {
             prevWord = foundWord;             
         }
         setGeneratedText(markovText);
+        props.setMarkov1Dict(markov1Dict);
         setLoading(false);
     };
 
